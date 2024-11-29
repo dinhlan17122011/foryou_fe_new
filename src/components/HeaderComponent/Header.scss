@@ -1,0 +1,92 @@
+// File: styles/navbar.scss
+
+.navbar-custom {
+    background-color: #e0fff8; // Màu nền nhạt
+  
+    .nav-link {
+      color: #6a9e3f; // Màu chữ ban đầu
+      font-weight: bold; // In đậm
+    //   font-size: 1.1rem; // Tăng kích thước chữ
+    font-size: 0.9rem; 
+      text-align: center; // Canh giữa
+      padding: 0.5rem 1rem; // Khoảng cách trên dưới và hai bên
+      margin-right: 50px; // Khoảng cách đều 50px giữa các liên kết
+      position: relative; // Để tạo vị trí cho thanh dưới chữ
+  
+      // Hiệu ứng hover
+      &:hover {
+        color: #6a9e3f; // Màu khi hover không thay đổi
+      }
+  
+      // Tạo thanh màu đen dưới chữ khi hover
+      &:after {
+        content: ""; // Tạo phần tử giả
+        position: absolute; // Đặt nó dưới chữ
+        width: 100%; // Độ rộng bằng với liên kết
+        height: 3px; // Chiều cao thanh
+        background-color: black; // Màu thanh
+        bottom: 0; // Đặt thanh ở dưới cùng của chữ
+        left: 0; // Đặt thanh ở vị trí bên trái
+        transform: scaleX(0); // Ban đầu thanh có chiều rộng bằng 0
+        transform-origin: bottom right; // Đặt điểm gốc để hiệu ứng mở rộng
+        transition: transform 0.3s ease-out; // Thêm hiệu ứng chuyển động
+      }
+  
+      // Hiệu ứng hover: khi hover, thanh sẽ mở rộng
+      &:hover::after {
+        transform: scaleX(1); // Mở rộng thanh khi hover
+        transform-origin: bottom left; // Điểm gốc cho thanh mở rộng từ trái sang phải
+      }
+    }
+  
+    .navbar-brand {
+      img {
+        border-radius: 10px; // Tùy chỉnh nếu cần bo góc logo
+      }
+    }
+  
+    // Style cho Button
+    .btn-outline-primary {
+      color: #6a9e3f; // Màu chữ nút giống với nav-link
+      border-color: #6a9e3f; // Màu viền giống màu chữ
+      font-weight: bold; // In đậm
+    //   font-size: 1.1rem; // Tăng kích thước chữ
+    font-size: 0.9rem; 
+      padding: 0.5rem 1rem; // Khoảng cách trên dưới và hai bên
+      margin-right: 1rem; // Khoảng cách giữa các nút
+  
+      &:hover {
+        background-color: transparent; // Giữ nền trong suốt khi hover
+        color: #4d7c30; // Màu chữ khi hover
+        border-color: #4d7c30; // Màu viền khi hover
+      }
+  
+      // Tạo thanh màu đen dưới chữ khi hover
+      &:after {
+        content: ""; // Tạo phần tử giả
+        position: absolute; // Đặt nó dưới chữ
+        width: 100%; // Độ rộng bằng với nút
+        height: 3px; // Chiều cao thanh
+        background-color: black; // Màu thanh
+        bottom: 0; // Đặt thanh ở dưới cùng của chữ
+        left: 0; // Đặt thanh ở vị trí bên trái
+        transform: scaleX(0); // Ban đầu thanh có chiều rộng bằng 0
+        transform-origin: bottom right; // Đặt điểm gốc để hiệu ứng mở rộng
+        transition: transform 0.3s ease-out; // Thêm hiệu ứng chuyển động
+      }
+  
+      // Hiệu ứng hover: khi hover, thanh sẽ mở rộng
+      &:hover::after {
+        transform: scaleX(1); // Mở rộng thanh khi hover
+        transform-origin: bottom left; // Điểm gốc cho thanh mở rộng từ trái sang phải
+      }
+    }
+  }
+
+  .navxinchao {
+    font-size: 14px;  // Giảm kích thước chữ
+    color: #555;      // Màu chữ
+    margin-right: 10px; // Khoảng cách bên phải
+  }
+  
+  
