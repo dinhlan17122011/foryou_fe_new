@@ -1,59 +1,66 @@
 .auth-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   max-width: 400px;
-  margin: 50px auto;
+  margin: 0 auto;
   padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  background: #fff;
+  background-color: #fff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
 
-  h2 {
-    font-size: 24px;
-    margin-bottom: 20px;
-    text-align: center;
-    color: #333;
-  }
+.auth-form h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
 
-  input {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-    box-sizing: border-box;
+.auth-form input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: border-color 0.3s;
+}
 
-    &:focus {
-      border-color: #4caf50;
-      outline: none;
-      box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
-    }
-  }
+.auth-form input:focus {
+  border-color: #4caf50;
+  outline: none;
+}
 
-  button {
-    width: 100%;
-    padding: 12px;
-    font-size: 16px;
-    border: none;
-    border-radius: 5px;
-    background-color: #4caf50;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+.auth-form button {
+  width: 100%;
+  padding: 12px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
 
-    &:hover {
-      background-color: #45a049;
-    }
-  }
+.auth-form button:hover {
+  background-color: #45a049;
+}
 
-  p {
-    text-align: center;
-    font-size: 14px;
-    color: #e91e63;
-    margin-top: 10px;
-  }
+.auth-form button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
 
-  .success {
-    color: #4caf50;
-  }
+.auth-form .success {
+  margin-top: 10px;
+  color: green;
+  font-weight: bold;
+}
+
+.auth-form .error {
+  margin-top: 10px;
+  color: red;
+  font-weight: bold;
 }

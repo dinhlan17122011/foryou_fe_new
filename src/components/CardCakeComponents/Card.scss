@@ -1,0 +1,36 @@
+.cake-list-container {
+    padding-left: 170px;
+    padding-right: 170px;
+  
+    @media (max-width: 1024px) {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  
+    .card {
+      border-radius: 16px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  
+      .MuiTypography-h6 {
+        font-size: 18px;
+        font-weight: 600;
+      }
+  
+      .MuiButton-root {
+        font-size: 12px;
+        font-weight: 500;
+      }
+    }
+  }
+  
+  .mota{
+    text-align : center;
+  }
+
+  .styled-text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 24px;
+    color: #4caf50;
+    font-weight: 500;
+  }
+  

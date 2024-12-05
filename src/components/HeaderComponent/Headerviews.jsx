@@ -12,10 +12,7 @@ function Header() {
   const userName = localStorage.getItem("userName"); // Lấy tên người dùng từ localStorage
 
   const handleLogin = () => {
-    // Giả lập đăng nhập
-    localStorage.setItem("token", "userTokenExample"); // Lưu token vào localStorage
-    localStorage.setItem("userName", "John Doe"); // Lưu tên người dùng
-    navigate("/"); // Chuyển hướng về trang chủ
+    navigate("/login"); // Chuyển hướng đến trang đăng nhập
   };
 
   const handleLogout = () => {
@@ -64,7 +61,7 @@ function Header() {
               <>
                 <Button
                   className="btn-outline-primary"
-                  onClick={() => navigate("/login")}
+                  onClick={handleLogin}
                   variant="outline-primary"
                 >
                   Đăng nhập
