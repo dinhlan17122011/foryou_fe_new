@@ -1,0 +1,47 @@
+// StoreSystem.scss
+.store-system {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 2.5rem;
+      color: #3a7a2d;
+      font-weight: bold;
+      margin-bottom: 15px;
+  
+    }
+  
+    .store-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+  
+      .store {
+        background-color: #fff;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  
+        h2 {
+          margin-bottom: 10px;
+        }
+  
+        p {
+          margin: 5px 0;
+        }
+      }
+    }
+  
+    .video-placeholder {
+      margin-top: 20px;
+      padding: 20px;
+      background-color: #e0e0e0;
+      text-align: center;
+      border-radius: 8px;
+    }
+  }
+  

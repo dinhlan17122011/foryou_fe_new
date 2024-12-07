@@ -13,18 +13,32 @@ import {
 
 const StyledText = ({ text }) => {
   return (
-    <Box display="flex" alignItems="center" mb={2}>
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        mb: 2,
+        // pl: "170px", // Căn lề trái
+        // backgroundColor: "#F9F7EC", // Màu nền
+        py: 2, // Khoảng cách trên dưới
+      }}
+    >
       <Box
         sx={{
           width: 4,
-          height: "100%",
+          height: 30,
           backgroundColor: "#4caf50",
-          marginRight: 1,
+          borderRadius: "2px",
+          mr: 2,
         }}
       />
       <Typography
         variant="h5"
-        className="styled-text"
+        fontWeight="bold"
+        sx={{
+          color: "#4caf50", // Màu chữ
+          fontFamily: "Arial, sans-serif",
+        }}
       >
         {text}
       </Typography>
@@ -59,11 +73,11 @@ const CakeList = () => {
   const handleSizeChange = (cakeId, sizeIndex) => {
     setCategorizedCakes((prevCategorizedCakes) => {
       const updatedCakes = { ...prevCategorizedCakes };
-      for (const category in updatedCakes) {
+      Object.keys(updatedCakes).forEach((category) => {
         updatedCakes[category] = updatedCakes[category].map((cake) =>
           cake._id === cakeId ? { ...cake, selectedSizeIndex: sizeIndex } : cake
         );
-      }
+      });
       return updatedCakes;
     });
   };
@@ -73,12 +87,33 @@ const CakeList = () => {
       {Object.keys(categorizedCakes).map((category) => (
         <Box key={category} mb={4}>
           <StyledText text={category} />
-          <Grid container spacing={3}>
+          <Grid
+            container
+            spacing={3}
+            sx={{
+              animation: "fadeIn 0.5s ease-in-out",
+              "@keyframes fadeIn": {
+                from: { opacity: 0, transform: "translateY(20px)" },
+                to: { opacity: 1, transform: "translateY(0)" },
+              },
+            }}
+          >
             {categorizedCakes[category].map((cake) => {
               const selectedSize = cake.size[cake.selectedSizeIndex];
               return (
                 <Grid item xs={12} sm={6} md={4} key={cake._id}>
-                  <Card className="card">
+                  <Card
+                    className="card"
+                    sx={{
+                      borderRadius: 2,
+                      boxShadow: 3,
+                      "&:hover": {
+                        boxShadow: 6,
+                        transform: "scale(1.03)",
+                        transition: "all 0.3s ease-in-out",
+                      },
+                    }}
+                  >
                     <CardMedia
                       component="img"
                       height="200"
@@ -105,7 +140,7 @@ const CakeList = () => {
                         Giao được từ <strong>14 giờ 00 hôm nay</strong>
                       </Box>
                       <Typography variant="body2" sx={{ color: "#757575" }}>
-                        Giá: {" "}
+                        Giá:{" "}
                         <span
                           style={{
                             textDecoration: "line-through",
@@ -140,6 +175,10 @@ const CakeList = () => {
                               textTransform: "none",
                               borderRadius: "20px",
                               fontSize: "12px",
+                              "&:hover": {
+                                backgroundColor: "#e8f5e9",
+                                color: "#4caf50",
+                              },
                             }}
                             onClick={() => handleSizeChange(cake._id, index)}
                           >
@@ -154,8 +193,12 @@ const CakeList = () => {
                         fullWidth
                         sx={{
                           borderRadius: "20px",
-                          padding: "10px 0",
+                          padding: "12px 0",
                           fontWeight: "bold",
+                          backgroundColor: "#4caf50",
+                          "&:hover": {
+                            backgroundColor: "#388e3c",
+                          },
                         }}
                       >
                         Đặt ngay
