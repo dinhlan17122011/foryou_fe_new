@@ -22,6 +22,13 @@ function Header() {
     navigate("/login"); // Chuyển hướng về trang đăng nhập sau khi đăng xuất
   };
 
+  const scrollToSection = (sectionId) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <Navbar expand="lg" className="navbar-custom">
       <Container>
@@ -37,11 +44,11 @@ function Header() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href="#home">Giới thiệu</Nav.Link>
-            <Nav.Link href="#categories">Danh Mục</Nav.Link>
-            <Nav.Link href="#policies">Chính sách</Nav.Link>
-            <Nav.Link href="#feedback">Feedback</Nav.Link>
-            <Nav.Link href="#contact">Liên hệ</Nav.Link>
+            <Nav.Link onClick={() => scrollToSection("home")}>Giới thiệu</Nav.Link>
+            <Nav.Link onClick={() => scrollToSection("categories")}>Danh Mục</Nav.Link>
+            <Nav.Link onClick={() => scrollToSection("policies")}>Chính sách</Nav.Link>
+            <Nav.Link onClick={() => scrollToSection("feedback")}>Feedback</Nav.Link>
+            <Nav.Link onClick={() => scrollToSection("contact")}>Liên hệ</Nav.Link>
           </Nav>
           <Nav>
             {userName ? (

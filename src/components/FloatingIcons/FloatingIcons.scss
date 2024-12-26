@@ -1,0 +1,38 @@
+.floating-icons {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column; /* Xếp dọc */
+    gap: 15px; /* Khoảng cách giữa các biểu tượng */
+    z-index: 1000;
+  }
+  
+  .icon-link {
+    text-decoration: none; /* Xóa gạch chân liên kết */
+    color: #0078ff; /* Màu mặc định */
+    font-size: 40px; /* Kích thước cho các icon react-icons */
+    transition: transform 0.3s ease, color 0.3s ease;
+    animation: shake 1s infinite; /* Tăng thời gian rung và lặp lại */
+  }
+  
+  .icon-link:hover {
+    transform: scale(1.2); /* Phóng to khi hover */
+  }
+  
+  .icon {
+    cursor: pointer;
+  }
+  
+  .zalo-icon {
+    width: 40px; /* Định kích thước icon Zalo */
+    height: 40px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    animation: shake 1s infinite; /* Thêm hiệu ứng rung nhẹ cho icon Zalo */
+  }
+  
+  .zalo-icon:hover {
+    transform: scale(1.2); /* Hiệu ứng phóng to khi hover */
+  }
+  

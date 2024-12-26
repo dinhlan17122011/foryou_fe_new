@@ -32,7 +32,7 @@ const CartButton = () => {
         border: "none",
         cursor: "pointer",
       }}
-      onClick={() => navigate("/cart")} // Điều hướng tới trang giỏ hàng
+      onClick={() => navigate("/checkour")} // Điều hướng tới trang giỏ hàng
     >
       <FaShoppingCart style={{ fontSize: "24px" }} /> {/* Icon React */}
     </button>

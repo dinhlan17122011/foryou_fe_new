@@ -1,0 +1,54 @@
+/* Tổng container */
+.cake-section-container {
+    padding: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 15px;
+  }
+  
+  .cake-section-content {
+    display: flex;
+    max-width: 1200px;
+    gap: 30px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  
+  /* Phần hình ảnh */
+  .cake-image img {
+    width: 400px;
+    height: auto;
+    border-radius: 15px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+  }
+  
+  .cake-image img:hover {
+    transform: scale(1.05);
+  }
+  
+  /* Phần văn bản */
+  .cake-text {
+    max-width: 600px;
+    text-align: left;
+  }
+  
+  .cake-text h2 {
+    font-size: 2.5rem;
+    color: #3d9d59; /* Màu xanh */
+    margin-bottom: 10px;
+  }
+  
+  .cake-text h3 {
+    font-size: 2rem;
+    color: #f5a623; /* Màu cam */
+    margin-bottom: 20px;
+  }
+  
+  .cake-text p {
+    font-size: 1.2rem;
+    color: #555;
+    line-height: 1.8;
+  }
+  

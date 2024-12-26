@@ -1,26 +1,33 @@
-// App.js
-import { Routes, Route } from 'react-router-dom';
-import Header from './components/HeaderComponent/Headerviews';
-import { publicRoutes } from './routes';
-
-function App() {
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { publicRoutes } from "./routes"; // Import danh sách routes
+import PrivateRoute from "./components/PrivateRoute/PrivateRoute.jsx"; // Import PrivateRoute
+import Header from "./components/HeaderComponent/Headerviews.jsx"; // Import Header
+const App = () => {
   return (
-    <div className="App">
+    <Router>
       <Header />
       <Routes>
         {publicRoutes.map((route, index) => {
-          const Component = route.component; 
-          return (
+          const Component = route.component;
+
+          return route.isPrivate ? (
             <Route
               key={index}
               path={route.path}
-              element={<Component />} 
+              element={
+                <PrivateRoute>
+                  <Component />
+                </PrivateRoute>
+              }
             />
+          ) : (
+            <Route key={index} path={route.path} element={<Component />} />
           );
         })}
       </Routes>
-    </div>
+    </Router>
   );
-}
+};
 
 export default App;

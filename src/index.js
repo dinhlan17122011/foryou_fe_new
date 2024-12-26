@@ -1,11 +1,11 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import { BrowserRouter } from "react-router-dom";
-import App from "./App";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App';
+import { AuthProvider } from './context/AuthContext'; // Import AuthProvider
 import 'bootstrap/dist/css/bootstrap.min.css';
 ReactDOM.render(
-  <BrowserRouter>
+  <AuthProvider>
     <App />
-  </BrowserRouter>,
-  document.getElementById("root")
+  </AuthProvider>,
+  document.getElementById('root')
 );

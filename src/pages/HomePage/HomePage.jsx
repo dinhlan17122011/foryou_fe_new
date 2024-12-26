@@ -11,25 +11,41 @@ import CakeOrder from "../../components/CakeOrderCompontents/CakeOrder";
 import StoreSystem from "../../components/StoreSystemComponents/StoreSystem";
 import Feedback from "../../components/FeedbacksComponents/feedbacks";
 import Footer from "../../components/FooterComponents/Footer";
+import DeliveryTeam from "../../components/DeliveryTeamComponents/DeliveryTeam";
+import CakeSection from "../../components/CakeCollectionComponents/CakeCollection";
+import FloatingIcons from "../../components/FloatingIcons/FloatingIcons";
 
 const HomePage = () => {
 
   return (
     <div>
-      <SliderComponent />
-      <Introduction />
-      <CartButton />
-      <div style={{padding:'0 90px'}} >
-      <TitleSection />
-      <p className="mota">Mời bạn xem ngay hơn 99+ mẫu bánh kem, bánh sinh nhật tươi ngon, đa dạng, giá chỉ từ 120k</p>
-      <ProductCard/>
-      <AddFruit/>
-      <CakeOrder/>
+      <div id="home">
+        <SliderComponent />
+        <Introduction />
       </div>
-      <ShippingPolicy/>
-      <StoreSystem/>
-      <Feedback />
+        <DeliveryTeam />
+        <CakeSection />
+        <CartButton />
+      <div id="categories">
+        <div style={{ padding: '0 90px' }}>
+          <TitleSection />
+          <p className="mota">Mời bạn xem ngay hơn 99+ mẫu bánh kem, bánh sinh nhật tươi ngon, đa dạng, giá chỉ từ 120k</p>
+          <ProductCard />
+          <AddFruit />
+          <CakeOrder />
+        </div>
+      </div>
+      <div id="policies">
+        <ShippingPolicy />
+      </div>
+      <div id="feedback">
+        <Feedback />
+      </div>
+      <div id="contact">
+        <StoreSystem />
+      </div>
       <Footer />
+      <FloatingIcons />
     </div>
   );
 };
