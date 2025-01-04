@@ -5,6 +5,7 @@ import "./logIn.scss";  // Đảm bảo rằng bạn có tệp SCSS hoặc CSS n
 
 const LogIn = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
+  
   const [message, setMessage] = useState("");  // Thông báo thành công
   const [errorMessage, setErrorMessage] = useState("");  // Thông báo lỗi
   const [loading, setLoading] = useState(false);  // Trạng thái loading
@@ -16,37 +17,38 @@ const LogIn = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();  // Ngăn chặn reload trang khi submit form
-    setLoading(true);  // Đặt trạng thái loading thành true
-    setMessage("");  // Đặt lại thông báo
-    setErrorMessage("");  // Đặt lại thông báo lỗi
+    e.preventDefault();
+    setLoading(true);
+    setMessage("");
+    setErrorMessage("");
   
     try {
-      // Gửi yêu cầu đăng nhập đến API
-      const res = await axios.post("http://localhost:3000/api/users/login", formData);
+      const res = await axios.post(
+        "http://localhost:3000/api/users/login",
+        formData,
+        { withCredentials: true } // Cho phép gửi và nhận cookie
+      );
   
-      if (res.data.token && res.data.user?.name) {
-        // Lưu thông tin vào localStorage
+      if (res.data.token && res.data.user?.id) {
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("userName", res.data.user.name);
+        localStorage.setItem("userId", res.data.user.id); // Lưu userId
   
-        // Thông báo thành công
         setMessage(res.data.message || "Login successful!");
-  
-        // Điều hướng về trang chủ ngay lập tức
-        navigate("/");  // Điều hướng về trang chủ sau khi đăng nhập thành công
+        navigate("/"); // Điều hướng sau khi đăng nhập thành công
       } else {
         throw new Error("Invalid login response");
       }
     } catch (error) {
-      console.error(error);  // Log lỗi chi tiết ra console
+      console.error(error);
       setErrorMessage(
         error.response?.data?.message || "An error occurred. Please try again."
       );
     } finally {
-      setLoading(false);  // Kết thúc trạng thái loading
+      setLoading(false);
     }
   };
+  
   
   return (
     <form className="auth-form" onSubmit={handleSubmit}>

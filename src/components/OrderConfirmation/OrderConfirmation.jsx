@@ -16,33 +16,6 @@ const timeOptions = [
   "19h-20h",
   "20h-21h",
 ];
-
-function getUserIdFromCookie() {
-  // Lấy tất cả cookies dưới dạng chuỗi
-  const cookies = document.cookie.split(';');
-
-  // Duyệt qua các cookie
-  for (let cookie of cookies) {
-    // Loại bỏ khoảng trắng thừa từ tên cookie và giá trị cookie
-    const [name, value] = cookie.trim().split('=');
-
-    // Kiểm tra xem tên cookie có phải là 'userId' không
-    if (name === 'userId') {
-      return value;  // Trả về giá trị cookie userId
-    }
-  }
-
-  // Nếu không tìm thấy cookie userId, trả về null
-  return null;
-}
-
-// Lấy userId từ cookie và in ra console
-const userId = getUserIdFromCookie();
-console.log('UserId từ cookie:', userId);
-
-
-
-
 const districts = ["Đống Đa", "Thanh Xuân", "Hà Đông"];
 
 const wardsByDistrict = {
@@ -58,6 +31,17 @@ const Cart = () => {
 
   const [products, setProducts] = useState([]);
 
+  const [userId, setUserId] = useState(null);
+
+  useEffect(() => {
+    // Kiểm tra xem userId đã được lưu trong localStorage chưa
+    const storedUserId = localStorage.getItem("userId");
+    console.log(storedUserId);
+    
+    if (storedUserId) {
+      setUserId(storedUserId);  // Cập nhật userId khi đã đăng nhập
+    }
+  }, []);
 useEffect(() => {
   // Lấy danh sách sản phẩm từ API khi component được mount
   axios
