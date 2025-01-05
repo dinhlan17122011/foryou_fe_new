@@ -2,8 +2,6 @@ import React from 'react';
 import "./Checkour.scss";
 import OrderConfirmation from '../../components/OrderConfirmation/OrderConfirmation';
 
-console.log('OrderConfirmation:', OrderConfirmation);
-
 const Checkour = () => {
   return (
     <div>

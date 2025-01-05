@@ -5,7 +5,6 @@ import "./logIn.scss";  // Đảm bảo rằng bạn có tệp SCSS hoặc CSS n
 
 const LogIn = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
-  
   const [message, setMessage] = useState("");  // Thông báo thành công
   const [errorMessage, setErrorMessage] = useState("");  // Thông báo lỗi
   const [loading, setLoading] = useState(false);  // Trạng thái loading
@@ -28,12 +27,17 @@ const LogIn = () => {
         formData,
         { withCredentials: true } // Cho phép gửi và nhận cookie
       );
-  
-      if (res.data.token && res.data.user?.id) {
+      
+      console.log(res.data); // Log phản hồi để kiểm tra
+      if (res.data.token && res.data.user?.name) {
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("userName", res.data.user.name);
-        localStorage.setItem("userId", res.data.user.id); // Lưu userId
-  
+        localStorage.setItem("userId", res.data.user.id || ''); // Bạn có thể xử lý user.id nếu có
+        console.log(res.data.user.idid);  //Giá trị undefined
+        console.log(res.data);  
+        console.log(res.data.user?.id);  // Giá trị undefined
+
+        
         setMessage(res.data.message || "Login successful!");
         navigate("/"); // Điều hướng sau khi đăng nhập thành công
       } else {
@@ -49,10 +53,10 @@ const LogIn = () => {
     }
   };
   
-  
   return (
     <form className="auth-form" onSubmit={handleSubmit}>
       <h2>Login</h2>
+      
       {/* Input Email */}
       <input
         type="email"
@@ -62,6 +66,7 @@ const LogIn = () => {
         onChange={handleChange}
         required
       />
+      
       {/* Input Password */}
       <input
         type="password"
@@ -71,6 +76,7 @@ const LogIn = () => {
         onChange={handleChange}
         required
       />
+      
       {/* Button Đăng nhập */}
       <button type="submit" disabled={loading}>
         {loading ? "Logging in..." : "Login"}

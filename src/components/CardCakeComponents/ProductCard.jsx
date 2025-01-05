@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 import {
   Card,
   CardMedia,
@@ -65,7 +66,10 @@ const CakeList = () => {
 
   const handleCreateOrder = (cakeId, selectedSizeIndex) => {
     if (!userId) {
-      alert("Vui lòng đăng nhập trước khi đặt hàng.");
+      toast.warning("Vui lòng đăng nhập trước khi đặt hàng!", {
+        position: "top-center",
+        autoClose: 3000, // Thời gian tự đóng (ms)
+      });
       return;
     }
   
@@ -78,7 +82,9 @@ const CakeList = () => {
     }
   
     if (!cake) {
-      console.error("Không tìm thấy bánh.");
+      toast.error("Không tìm thấy bánh!", {
+        position: "top-center",
+      });
       return;
     }
   
@@ -102,17 +108,22 @@ const CakeList = () => {
     axios
       .post("http://localhost:3000/api/order-confirmation/create", requestBody)
       .then((response) => {
-        alert("Đặt hàng thành công!");
+        toast.success("Đặt hàng thành công!", {
+          position: "top-center",
+        });
         console.log("Đơn hàng:", response.data.order);
       })
       .catch((error) => {
+        toast.error("Đặt hàng thất bại, vui lòng thử lại!", {
+          position: "top-center",
+        });
         console.error("Lỗi khi đặt hàng:", error);
-        alert("Đặt hàng thất bại, vui lòng thử lại.");
       })
       .finally(() => {
         setLoading(false);
       });
   };
+  
   
   
 
