@@ -28,11 +28,19 @@ const Cart = () => {
   const [wards, setWards] = useState([]);
   const [selectedWard, setSelectedWard] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
-
   const [products, setProducts] = useState([]);
-
   const [userId, setUserId] = useState(null);
+  const [cartItems, setCartItems] = useState([]);
 
+  useEffect(() => {
+    if (userId) {
+      axios
+        .get(`http://localhost:3000/api/cart?userId=${userId}`)
+        .then((response) => setCartItems(response.data))
+        .catch((error) => console.error("Error fetching cart items:", error));
+    }
+  }, [userId]);
+  
   useEffect(() => {
     // Kiểm tra xem userId đã được lưu trong localStorage chưa
     const storedUserId = localStorage.getItem("userId");
@@ -76,29 +84,36 @@ const handleAddProduct = (newProduct) => {
     <div>
       <div>
     <Box className="cart-container">
-      <Typography variant="h4" className="cart-title">
-        Giỏ hàng
-      </Typography>
-      <Typography variant="subtitle1" className="cart-subtitle">
-        Bạn có <span>0 sản phẩm</span> trong giỏ hàng
-      </Typography>
-      <Table className="cart-table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Sản phẩm</TableCell>
-            <TableCell>Giá bán</TableCell>
-            <TableCell>Số lượng</TableCell>
-            <TableCell>Tạm tính</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          <TableRow>
-            <TableCell colSpan={4} className="empty-cart">
-              Giỏ hàng trống. Vui lòng thêm sản phẩm vào giỏ hàng.
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
+      <TableBody>
+  {cartItems.length > 0 ? (
+    cartItems.map((item) => (
+      <TableRow key={item.productId}>
+        <TableCell>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <img
+              src={item.image || "https://via.placeholder.com/50"}
+              alt={item.name}
+              style={{ width: 50, height: 50, marginRight: 8 }}
+            />
+            <Typography>{item.name}</Typography>
+          </Box>
+        </TableCell>
+        <TableCell>{item.price.toLocaleString()} đ</TableCell>
+        <TableCell>{item.quantity}</TableCell>
+        <TableCell>
+          {(item.price * item.quantity).toLocaleString()} đ
+        </TableCell>
+      </TableRow>
+    ))
+  ) : (
+    <TableRow>
+      <TableCell colSpan={4} className="empty-cart">
+        Giỏ hàng trống. Vui lòng thêm sản phẩm vào giỏ hàng.
+      </TableCell>
+    </TableRow>
+  )}
+</TableBody>
+
     </Box>
       </div>
 

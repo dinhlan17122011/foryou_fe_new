@@ -48,6 +48,73 @@ const StyledText = ({ text }) => {
 
 const CakeList = () => {
   const [categorizedCakes, setCategorizedCakes] = useState({});
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const [userId, setUserId] = useState(null);
+
+  useEffect(() => {
+    // Lấy userId từ localStorage
+    const storedUserId = localStorage.getItem("userId");
+    if (storedUserId) {
+      setUserId(storedUserId);
+    } else {
+      setMessage("Vui lòng đăng nhập trước khi tạo đơn hàng.");
+    }
+  }, []);
+
+  const handleCreateOrder = (cakeId, selectedSizeIndex) => {
+    if (!userId) {
+      alert("Vui lòng đăng nhập trước khi đặt hàng.");
+      return;
+    }
+  
+    const categoryKeys = Object.keys(categorizedCakes);
+    let cake;
+  
+    for (const category of categoryKeys) {
+      cake = categorizedCakes[category].find((item) => item._id === cakeId);
+      if (cake) break;
+    }
+  
+    if (!cake) {
+      console.error("Không tìm thấy bánh.");
+      return;
+    }
+  
+    const selectedSize = cake.size[selectedSizeIndex];
+    const orderItem = {
+      namecake: cake.name,
+      price: selectedSize.price,
+      quantity: 1,
+      code: cake.code,
+      size: selectedSize.size,
+      notecake: "",
+    };
+  
+    const requestBody = {
+      userId,
+      items: [orderItem],
+    };
+  
+    setLoading(true);
+  
+    axios
+      .post("http://localhost:3000/api/order-confirmation/create", requestBody)
+      .then((response) => {
+        alert("Đặt hàng thành công!");
+        console.log("Đơn hàng:", response.data.order);
+      })
+      .catch((error) => {
+        console.error("Lỗi khi đặt hàng:", error);
+        alert("Đặt hàng thất bại, vui lòng thử lại.");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+  
+  
 
   useEffect(() => {
     axios
@@ -188,21 +255,24 @@ const CakeList = () => {
                       </Box>
                       <Divider sx={{ marginY: 2 }} />
                       <Button
-                        variant="contained"
-                        color="primary"
-                        fullWidth
-                        sx={{
-                          borderRadius: "20px",
-                          padding: "12px 0",
-                          fontWeight: "bold",
-                          backgroundColor: "#4caf50",
-                          "&:hover": {
-                            backgroundColor: "#388e3c",
-                          },
-                        }}
-                      >
-                        Đặt ngay
-                      </Button>
+  variant="contained"
+  color="primary"
+  fullWidth
+  disabled={loading}
+  sx={{
+    borderRadius: "20px",
+    padding: "12px 0",
+    fontWeight: "bold",
+    backgroundColor: loading ? "#ccc" : "#4caf50",
+    "&:hover": {
+      backgroundColor: loading ? "#ccc" : "#388e3c",
+    },
+  }}
+  onClick={() => handleCreateOrder(cake._id, cake.selectedSizeIndex)}
+>
+  {loading ? "Đang xử lý..." : "Đặt ngay"}
+</Button>
+
                     </CardContent>
                   </Card>
                 </Grid>
