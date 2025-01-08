@@ -17,6 +17,9 @@ import {
   TextField,
   Checkbox,
 } from "@mui/material";
+import { toast } from "react-toastify";
+
+// toast.configure();
 
 const timeOptions = [
   "10h-11h",
@@ -52,16 +55,20 @@ const Cart = () => {
   const [id,setId] = useState(null);
   const [id1,setId1] = useState(null);
   const [accessoryList, setAccessoryList] = useState([]);
-  
+  const [isFormValid, setIsFormValid] = useState(false);
+  const [soTien, setSoTien] = useState(0);
+  const [bankCode, setBankCode] = useState('VNBANK');
+  const [language, setLanguage] = useState('vn');
+  const [paymentUrl, setPaymentUrl] = useState('');
   const [formData, setFormData] = useState({
     placer: { name: '', phone: '' },
     receiver: { similarToAbove: false, name: '', phone: '' },
     address: { district: '', ward: '', details: '' },
     time: { day: '', time: '' },
-    bill: { tickBill: false },
+    bill: { tickBill: true },
     items: [], // Đảm bảo thông tin sản phẩm có sẵn ở đây
   });
-
+  console.log(id1);
   useEffect(() => {
     const storedUserId = localStorage.getItem("userId");
     if (storedUserId) {
@@ -73,38 +80,67 @@ const Cart = () => {
   }, []);
   
   
+    // Hàm kiểm tra tính hợp lệ
+    const validateForm = () => {
+      const isPlacerValid = formData.placer.name && formData.placer.phone;
+      const isReceiverValid = formData.receiver.name && formData.receiver.phone;
+      const isAddressValid =
+        selectedDistrict &&
+        formData.address.ward &&
+        formData.address.details;
+      const isTimeValid = formData.time.day && formData.time.time;
+  
+      // Tất cả các trường phải hợp lệ
+      return isPlacerValid && isReceiverValid && isAddressValid && isTimeValid;
+    };
+  
+    // Theo dõi các thay đổi của formData và kiểm tra hợp lệ
+    useEffect(() => {
+      setIsFormValid(validateForm());
+    }, [formData, selectedDistrict]);
+
   useEffect(() => {
     const storedUserId = localStorage.getItem("userId");
   
-    if (storedUserId) {
-      setUserId(storedUserId); // Đảm bảo `userId` được gán giá trị
-      axios
-        .get(`http://localhost:3000/api/order-confirmation/user/${storedUserId}`)
-        .then((response) => {
-          if (response.data.orders && response.data.orders.length > 0) {
-            setCartItems(response.data.orders[0].items);
-            setId(response.data.orders[0]._id);
-            setId1(response.data.orders[0]._id);
-            setCartItems1(response.data.orders[0].items[0])
-            setCartItems2(response.data.orders[0])
-            console.log("OK1:", response.data.orders[0]);
-            
-            console.log("Đơn hàng đầu tiên:", response.data.orders[0]);
-          } else {
-            console.error("Không tìm thấy đơn hàng.");
-          }
-        })
-        .catch((error) => {
-          console.error("Lỗi khi lấy thông tin đơn hàng:", error);
-        });
-    } else {
+    if (!storedUserId) {
       console.error("Không tìm thấy userId trong localStorage.");
       alert("Bạn chưa đăng nhập. Vui lòng đăng nhập trước khi tiếp tục.");
+      return;
     }
-  }, []); // Chỉ thực thi một lần khi component được mount
   
+    setUserId(storedUserId);
   
-
+    axios
+      .get(`http://localhost:3000/api/order-confirmation/user/${storedUserId}`)
+      .then((response) => {
+        const orders = response.data.orders;
+  
+        if (orders && orders.length > 0) {
+          const order = orders[0];
+          setId(order._id);
+          setId1(order._id);
+  
+          // Nếu trạng thái khác, xử lý như trước
+          if (order.status === "sold") {
+            setCartItems([]);
+            console.log("Đơn hàng đã hoàn tất, không hiển thị sản phẩm.");
+          } else {
+            const validItems = order.items.filter((item) => item.status !== "sold");
+            setCartItems(validItems);
+            setCartItems1(order.items[0]);
+            setCartItems2(order);
+            setSoTien(order.totalAmount);
+            console.log("Các sản phẩm hợp lệ trong đơn hàng:", validItems);
+          }
+        } else {
+          console.error("Không tìm thấy đơn hàng.");
+          setCartItems([]);
+        }
+      })
+      .catch((error) => {
+        console.error("Lỗi khi lấy thông tin đơn hàng:", error);
+      });
+  }, [setCartItems]); // Đảm bảo useEffect được theo dõi đúng dependency
   useEffect(() => {
     if (userId == null) {
       console.error("userId is null. Skipping API call.");
@@ -148,9 +184,20 @@ const Cart = () => {
   const handleDistrictChange = (e) => {
     const district = e.target.value;
     setSelectedDistrict(district);
-    setWards(wardsByDistrict[district] || []);
-    setSelectedWard("");
+    setWards(wardsByDistrict[district] || []); // Đảm bảo xử lý trường hợp undefined
+    console.log(wardsByDistrict[district]);
+    
+    // Đặt lại phường trong formData
+    setFormData((prevData) => ({
+      ...prevData,
+      address: {
+        ...prevData.address,
+        district: district,
+        ward: "", // Reset phường khi đổi quận
+      },
+    }));
   };
+  
 
   const handleAddAccessory = async (product) => {
     try {
@@ -177,24 +224,55 @@ const Cart = () => {
     }
   };
 
+  const handleButtonClick = () => {
+    handlePlaceOrder();  // Gọi hàm đặt hàng
+  };
   
   const handlePlaceOrder = async () => {
     try {
-      const response = await axios.put(`http://localhost:3000/api/order-confirmation/${id1}/update`, formData);
+      if (!cartItems || cartItems.length === 0) {
+        return console.error('Giỏ hàng trống, không thể đặt hàng!');
+      }
+  
+      const dataToUpdate = {
+        placer: formData.placer,
+        receiver: formData.receiver,
+        address: formData.address,
+        time: formData.time,
+        bill: formData.bill,
+        items: cartItems,
+        status: "completed", // Đánh dấu đơn hàng là đã hoàn tất
+      };
+  
+      // Cập nhật đơn hàng
+      const response = await axios.put(
+        `http://localhost:3000/api/order-confirmation/${id1}/update`,
+        dataToUpdate
+      );
+  
       console.log('Đơn hàng đã được cập nhật', response.data);
+  
+      // Cập nhật trạng thái sản phẩm thành "sold"
+      const updateStatusResponse = await axios.put(
+        'http://localhost:3000/api/order-confirmation/update-status',
+        {
+          orderId: id1,
+          status: 'sold',
+        }
+      );
+  
+      console.log('Trạng thái đơn hàng đã được cập nhật', updateStatusResponse.data);
+  
+      // Xóa các sản phẩm đã thanh toán khỏi giỏ hàng
+      setCartItems([]); // Reset trạng thái giỏ hàng trong React
+      toast.success("Đặt hàng thành công và sản phẩm đã được cập nhật trạng thái!", {
+        position: "top-center",
+      });
     } catch (error) {
-      console.error('Lỗi khi cập nhật đơn hàng:', error);
+      toast.error("Đặt hàng thất bại, vui lòng thử lại!", { position: "top-center" });
+      console.error('Lỗi khi cập nhật đơn hàng hoặc sản phẩm:', error);
     }
-  };
-
-  const handlePayment = async () => {
-    try {
-      const response = await axios.put(`http://localhost:3000/api/order-confirmation/${id1}/finalize`, { bill: formData.bill });
-      console.log('Đơn hàng đã thanh toán', response.data);
-    } catch (error) {
-      console.error('Lỗi khi thanh toán đơn hàng:', error);
-    }
-  };
+  };  
   
   if (!products) {
     return <Typography>Đang tải sản phẩm...</Typography>;
@@ -229,42 +307,43 @@ const Cart = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {cartItems.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={5} align="center" sx={{ color: "#999" }}>
-                    Giỏ hàng trống. Vui lòng thêm sản phẩm vào giỏ hàng.
-                  </TableCell>
-                </TableRow>
-              ) : (
-                cartItems.map((item) => (
-                  <TableRow key={item._id}>
-                    <TableCell>
-                      <strong>{item.namecake}</strong>
-                      <br />
-                      Mã sản phẩm: {item.code}
-                      <br />
-                      Kích thước: {item.size}
-                    </TableCell>
-                    <TableCell align="center">
-                      {item.price.toLocaleString()} đ
-                    </TableCell>
-                    <TableCell align="center">{item.quantity}</TableCell>
-                    <TableCell align="center">
-                      {(item.price * item.quantity).toLocaleString()} đ
-                    </TableCell>
-                    <TableCell align="center">
-                      <Button
-                        variant="contained"
-                        color="error"
-                        onClick={() => handleDeleteItem(item._id)}
-                      >
-                        Xóa
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
+  {cartItems.length === 0 ? (
+    <TableRow>
+      <TableCell colSpan={5} align="center" sx={{ color: "#999" }}>
+        Giỏ hàng trống hoặc đơn hàng đã được xử lý. Vui lòng kiểm tra lịch sử đơn hàng của bạn.
+      </TableCell>
+    </TableRow>
+  ) : (
+    cartItems.map((item) => (
+      <TableRow key={item._id}>
+        <TableCell>
+          <strong>{item.namecake}</strong>
+          <br />
+          Mã sản phẩm: {item.code}
+          <br />
+          Kích thước: {item.size}
+        </TableCell>
+        <TableCell align="center">
+          {item.price.toLocaleString()} đ
+        </TableCell>
+        <TableCell align="center">{item.quantity}</TableCell>
+        <TableCell align="center">
+          {(item.price * item.quantity).toLocaleString()} đ
+        </TableCell>
+        <TableCell align="center">
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => handleDeleteItem(item._id)}
+          >
+            Xóa
+          </Button>
+        </TableCell>
+      </TableRow>
+    ))
+  )}
+</TableBody>
+
           </Table>
         </TableContainer>
       </Box>
@@ -379,34 +458,45 @@ const Cart = () => {
   <section className="section">
     <h2>Địa chỉ nhận hàng</h2>
     <div className="form-group">
-      <label>Quận</label>
-      <select 
-        value={formData.address.district} 
-        onChange={(e) => setFormData({ ...formData, address: { ...formData.address, district: e.target.value } })}
-      >
-        <option value="">Chọn quận...</option>
-        {districts.map((district) => (
-          <option key={district} value={district}>
-            {district}
-          </option>
-        ))}
-      </select>
-    </div>
-    <div className="form-group">
-      <label>Phường</label>
-      <select 
-        value={formData.address.ward} 
-        onChange={(e) => setFormData({ ...formData, address: { ...formData.address, ward: e.target.value } })}
-        disabled={!wards.length}
-      >
-        <option value="">Chọn phường...</option>
-        {wards.map((ward) => (
-          <option key={ward} value={ward}>
-            {ward}
-          </option>
-        ))}
-      </select>
-    </div>
+  <label>Quận</label>
+  <select 
+    value={selectedDistrict} 
+    onChange={handleDistrictChange}
+  >
+    <option value="">Chọn quận...</option>
+    {Object.keys(wardsByDistrict).map((district) => (
+      <option key={district} value={district}>
+        {district}
+      </option>
+    ))}
+  </select>
+</div>
+
+<div className="form-group">
+  <label>Phường</label>
+  <select
+    value={formData.address.ward}
+    onChange={(e) => {
+      setSelectedWard(e.target.value);
+      setFormData((prevData) => ({
+        ...prevData,
+        address: {
+          ...prevData.address,
+          ward: e.target.value,
+        },
+      }));
+    }}
+    disabled={!wards.length}
+  >
+    <option value="">Chọn phường...</option>
+    {wards.map((ward) => (
+      <option key={ward} value={ward}>
+        {ward}
+      </option>
+    ))}
+  </select>
+</div>
+
     <div className="form-group">
       <label>Địa chỉ cụ thể</label>
       <input 
@@ -475,8 +565,14 @@ const Cart = () => {
               <label htmlFor="cashOnDelivery">Thanh toán khi nhận hàng</label>
             </div>
           </section>
-
-          <button onClick={handlePayment}>Thanh toán</button>
+          <button
+              className="submit-btn"
+              type="button"
+              onClick={handleButtonClick}
+              disabled={!isFormValid} // Vô hiệu hóa nút nếu form không hợp lệ
+            >
+              Đặt hàng
+            </button>
         </div>
       </div>
     </div>
