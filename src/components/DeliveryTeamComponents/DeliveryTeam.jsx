@@ -14,8 +14,6 @@ const DeliveryTeam = () => {
       <div class="delivery-gallery">
   <div class="gallery-item"><img src="https://www.savor.vn/_next/image?url=https%3A%2F%2Fs3.kstorage.vn%2Fsavor-web%2Fsrc%2Fassets%2Fimages%2Flanding-page-bsn%2Fship%2FshipperRow1.png&w=1400&q=75" alt="Delivery 1" /></div>
   <div class="gallery-item"><img src="https://www.savor.vn/_next/image?url=https%3A%2F%2Fs3.kstorage.vn%2Fsavor-web%2Fsrc%2Fassets%2Fimages%2Flanding-page-bsn%2Fship%2FshipperRow2.png&w=1400&q=75" alt="Delivery 2" /></div>
-  <div class="gallery-item"><img src="https://www.savor.vn/_next/image?url=https%3A%2F%2Fs3.kstorage.vn%2Fsavor-web%2Fsrc%2Fassets%2Fimages%2Flanding-page-bsn%2Fship%2FshipperCol.png&w=1400&q=75" alt="Delivery 3" /></div>
-  <div class="gallery-item"><img src="https://www.savor.vn/_next/image?url=https%3A%2F%2Fs3.kstorage.vn%2Fsavor-web%2Fsrc%2Fassets%2Fimages%2Flanding-page-bsn%2Fship%2FshipperRow3.png&w=1400&q=75" alt="Delivery 4" /></div>
   <div class="gallery-item"><img src="https://www.savor.vn/_next/image?url=https%3A%2F%2Fs3.kstorage.vn%2Fsavor-web%2Fsrc%2Fassets%2Fimages%2Flanding-page-bsn%2Fship%2FshipperRow4.png&w=1400&q=75" alt="Delivery 5" /></div>
 </div>
 

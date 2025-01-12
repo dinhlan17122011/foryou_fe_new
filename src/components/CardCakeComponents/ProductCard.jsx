@@ -11,6 +11,7 @@ import {
   Box,
   Divider,
 } from "@mui/material";
+import CakeDetail from "../CakeDetail/CakeDetail";
 
 const StyledText = ({ text }) => {
   return (
@@ -54,6 +55,19 @@ const CakeList = () => {
   const [message, setMessage] = useState("");
   const [userId, setUserId] = useState(null);
 
+  const [selectedCakeId, setSelectedCakeId] = useState(null);
+const [openDialog, setOpenDialog] = useState(false);
+
+// Thêm hàm xử lý
+const handleOpenDialog = (cakeId) => {
+  setSelectedCakeId(cakeId);
+  setOpenDialog(true);
+};
+
+const handleCloseDialog = () => {
+  setOpenDialog(false);
+  setSelectedCakeId(null);
+};
   useEffect(() => {
     // Lấy userId từ localStorage
     const storedUserId = localStorage.getItem("userId");
@@ -161,6 +175,7 @@ const CakeList = () => {
   };
 
   return (
+    <div>
     <Box className="cake-list-container">
       {Object.keys(categorizedCakes).map((category) => (
         <Box key={category} mb={4}>
@@ -193,11 +208,13 @@ const CakeList = () => {
                     }}
                   >
                     <CardMedia
-                      component="img"
-                      height="200"
-                      image={selectedSize.image}
-                      alt={cake.name}
-                    />
+  component="img"
+  height="200"
+  image={selectedSize.image}
+  alt={cake.name}
+  sx={{ cursor: 'pointer' }}
+  onClick={() => handleOpenDialog(cake._id)}
+/>
                     <CardContent>
                       <Typography variant="h6" fontWeight="bold" gutterBottom>
                         {cake.name}
@@ -286,13 +303,21 @@ const CakeList = () => {
 
                     </CardContent>
                   </Card>
+
                 </Grid>
               );
             })}
           </Grid>
         </Box>
       ))}
+      
     </Box>
+    <CakeDetail
+  open={openDialog}
+  handleClose={handleCloseDialog}
+  cakeId={selectedCakeId}
+/>
+    </div>
   );
 };
 
